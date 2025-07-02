@@ -48,6 +48,16 @@ export const FONTS: FontOption[] = [
     weights: [200, 300, 400, 500, 600, 700, 800],
   },
   {
+    name: "Funnel Sans",
+    variable: true,
+    weights: [200, 300, 400, 500, 600, 700, 800],
+  },
+  {
+    name: "Funnel Display",
+    variable: true,
+    weights: [200, 300, 400, 500, 600, 700, 800],
+  },
+  {
     name: "Geist",
     variable: true,
     weights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
@@ -106,6 +116,11 @@ export const FONTS: FontOption[] = [
   },
 
   // Monospace fonts
+  {
+    name: "Geist Mono",
+    variable: true,
+    weights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
+  },
   {
     name: "Space Mono",
     variable: false,
