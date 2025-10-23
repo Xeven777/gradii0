@@ -21,6 +21,8 @@ import {
   ChevronRight,
   ShuffleIcon,
   RotateCcwIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -84,8 +86,8 @@ function DraggablePreview({
 
   const style = transform
     ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-      }
+      transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+    }
     : undefined;
 
   return (
@@ -355,9 +357,8 @@ export default function DesktopApp({
                     </div>
                     <div className="relative flex flex-col gap-2 pt-2">
                       <label
-                        className={`px-4 py-2 bg-foreground/5 rounded-xl hover:text-foreground/80 text-primary transition-all duration-300 flex items-center gap-2 cursor-pointer justify-center border border-primary/10  ${
-                          isUploading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
+                        className={`px-4 py-2 bg-foreground/5 rounded-xl hover:text-foreground/80 text-primary transition-all duration-300 flex items-center gap-2 cursor-pointer justify-center border border-primary/10  ${isUploading ? "opacity-50 cursor-not-allowed" : ""
+                          }`}
                       >
                         <Input
                           type="file"
@@ -453,27 +454,54 @@ export default function DesktopApp({
                           />
                         </div>
                       </div>
-                      <div className="flex flex-col gap-2 w-full">
+
+                      <div className="flex flex-col gap-2">
                         <label className="text-sm text-muted-foreground">
                           Font
                         </label>
-                        <Select
-                          value={fontFamily}
-                          onValueChange={setFontFamily}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select font" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectGroup>
-                              {fonts.map((font) => (
-                                <SelectItem key={font.name} value={font.name}>
-                                  {font.name}
-                                </SelectItem>
-                              ))}
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
+
+                        <div className="flex items-center gap-1">
+                          <Select value={fontFamily} onValueChange={setFontFamily}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select font" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectGroup>
+                                {fonts.map((font) => (
+                                  <SelectItem key={font.name} value={font.name}>
+                                    <div style={{ fontFamily: `"${font.name}", sans-serif` }}>
+                                      {font.name}
+                                    </div>
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+
+                          <Button
+                            type="button"
+                            size="icon"
+                            onClick={() => {
+                              const i = fonts.findIndex((f) => f.name === fontFamily);
+                              const prev = (i - 1 + fonts.length) % fonts.length;
+                              setFontFamily(fonts[prev].name);
+                            }}>
+                            <ChevronUpIcon className="size-4" />
+                          </Button>
+
+                          <Button
+                            type="button"
+                            size="icon"
+                            onClick={() => {
+                              const i = fonts.findIndex((f) => f.name === fontFamily);
+                              const next = (i + 1) % fonts.length;
+                              setFontFamily(fonts[next].name);
+                            }}>
+                            <ChevronDownIcon className="size-4" />
+
+                          </Button>
+                        </div>
+
                       </div>
                     </>
                   )}
@@ -901,11 +929,9 @@ export default function DesktopApp({
                               lineHeight: lineHeight,
                               color: textColor,
                               fontStyle: isItalic ? "italic" : "normal",
-                              textDecoration: `${
-                                isUnderline ? "underline" : ""
-                              } ${
-                                isStrikethrough ? "line-through" : ""
-                              }`.trim(),
+                              textDecoration: `${isUnderline ? "underline" : ""
+                                } ${isStrikethrough ? "line-through" : ""
+                                }`.trim(),
                               textShadow: `${textShadow.offsetX}px ${textShadow.offsetY}px ${textShadow.blur}px ${textShadow.color}`,
                               transform: `translate(${textPosition.x}px, ${textPosition.y}px)`,
                               whiteSpace: "pre-wrap",
@@ -1143,9 +1169,8 @@ export default function DesktopApp({
             </div>
             <div className="relative">
               <label
-                className={`px-4 py-2 bg-foreground/5 rounded-xl hover:text-foreground/80 text-primary transition-all duration-300 flex items-center gap-2 cursor-pointer justify-center border border-primary/10 ${
-                  isUploading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className={`px-4 py-2 bg-foreground/5 rounded-xl hover:text-foreground/80 text-primary transition-all duration-300 flex items-center gap-2 cursor-pointer justify-center border border-primary/10 ${isUploading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
               >
                 <Input
                   type="file"
