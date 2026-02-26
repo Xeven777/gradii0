@@ -1,11 +1,12 @@
 "use client";
 import DesktopApp from "@/components/core-ui/desktop-app";
 import MobileApp from "@/components/core-ui/mobile-app";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { toast } from "sonner";
 import { FONTS } from "@/lib/constants";
 import { useWallpaperStore } from "@/store/wallpaper";
 import { useSafariCheck } from "@/hooks/use-safari-check";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 
 export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
@@ -46,7 +47,7 @@ export default function Home() {
     }
   }, [shouldShowPWAPrompt]);
 
-  const downloadImage = async () => {
+  const downloadImage = useCallback(async () => {
     try {
       const previewCanvas = document.querySelector(
         "#wallpaper canvas"
@@ -193,9 +194,9 @@ export default function Home() {
       console.error(err);
       toast.error("Failed to download image");
     }
-  };
+  }, [isSafari, store]);
 
-  const copyImage = async () => {
+  const copyImage = useCallback(async () => {
     try {
       const previewCanvas = document.querySelector(
         "#wallpaper canvas"
@@ -350,7 +351,7 @@ export default function Home() {
       console.error(err);
       toast.error("Failed to copy image");
     }
-  };
+  }, [store]);
 
   const handleColorChange = (color: string) => {
     switch (store.activeColorType) {
@@ -411,7 +412,7 @@ export default function Home() {
     reader.readAsDataURL(file);
   };
 
-  const handlePaletteChange = () => {
+  const handlePaletteChange = useCallback(() => {
     const generateHarmonious = () => {
       // Color schemes with more variety
       const schemes = [
@@ -542,7 +543,64 @@ export default function Home() {
         cy: store.circles[i]?.cy ?? Math.random() * 100,
       }))
     );
-  };
+  }, [store]);
+
+  const copyCSS = useCallback(() => {
+    const {
+      backgroundColor,
+      circles,
+      blur,
+      saturation,
+      contrast,
+      brightness,
+    } = store;
+
+    const gradients = circles
+      .map(
+        (c) =>
+          `radial-gradient(at ${c.cx}% ${c.cy}%, ${c.color} 0px, transparent 50%)`
+      )
+      .join(",\n    ");
+
+    const css = `background-color: ${backgroundColor};
+background-image: 
+    ${gradients};
+filter: blur(${blur / 4}px) saturate(${saturation}%) contrast(${contrast}%) brightness(${brightness}%);`;
+
+    navigator.clipboard.writeText(css);
+    toast.success("CSS mesh gradient approximation copied");
+  }, [store]);
+
+  const shortcuts = useMemo(
+    () => ({
+      g: () => {
+        handlePaletteChange();
+        store.setBackgroundImage(null);
+        if (store.blur === 0) {
+          store.setBlur(600);
+        }
+      },
+      s: () => store.generateNewPalette(),
+      d: () => downloadImage(),
+      c: () => copyImage(),
+      "alt+c": () => copyCSS(),
+      "ctrl+z": () => {
+        if (store.previousCircles.length > 0) {
+          store.setCircles(store.previousCircles);
+          store.setPreviousCircles([]);
+        }
+      },
+    }),
+    [
+      handlePaletteChange,
+      store,
+      downloadImage,
+      copyImage,
+      copyCSS,
+    ]
+  );
+
+  useKeyboardShortcuts(shortcuts);
 
   const AppComponent = isMobile ? MobileApp : DesktopApp;
 
@@ -553,6 +611,7 @@ export default function Home() {
       isSafari={isSafari}
       downloadImage={downloadImage}
       copyImage={copyImage}
+      copyCSS={copyCSS}
       handleColorChange={handleColorChange}
       handleImageUpload={handleImageUpload}
       handlePaletteChange={handlePaletteChange}
