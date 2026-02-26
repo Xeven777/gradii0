@@ -26,6 +26,13 @@ import {
   RotateCcwIcon,
   ChevronUpIcon,
   ChevronDownIcon,
+  Monitor,
+  Smartphone,
+  Tablet,
+  Image as ImageIcon,
+  Facebook,
+  Instagram,
+  Linkedin,
 } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import {
@@ -66,6 +73,7 @@ import { useGesture } from "@use-gesture/react";
 import { PositionControl } from "../ui/position-control";
 import { toast } from "sonner";
 import SettingsDrawerContent from "../drawer-content/settings-drawer-content";
+import TwitterIcon from "@/lib/icons/twitter";
 import { motion } from "motion/react";
 import {
   Dialog,
@@ -172,6 +180,7 @@ export default function MobileApp({
   textAlign,
   setTextAlign,
   copyImage,
+  copyCSS,
   isCopying,
   handlePaletteChange,
   resetPalette,
@@ -315,6 +324,9 @@ export default function MobileApp({
           <Button onClick={copyImage} disabled={isCopying} className="w-fit">
             <CopyIcon className="size-4" />
           </Button>
+          <Button onClick={copyCSS} className="w-fit" variant="secondary">
+            <span className="text-xs font-bold">CSS</span>
+          </Button>
         </div>
       </nav>
 
@@ -355,7 +367,15 @@ export default function MobileApp({
 
                   <div className="absolute inset-0 flex items-center justify-center z-40">
                     {sizeMode === "text" ? (
-                      <p
+                      <motion.p
+                        drag
+                        dragMomentum={false}
+                        onDragEnd={(_, info) => {
+                          setTextPosition({
+                            x: textPosition.x + info.offset.x / zoom,
+                            y: textPosition.y + info.offset.y / zoom,
+                          });
+                        }}
                         style={{
                           fontSize: `${fontSize}em`,
                           fontWeight: fontWeight,
@@ -368,27 +388,38 @@ export default function MobileApp({
                           textDecoration: `${isUnderline ? "underline" : ""} ${isStrikethrough ? "line-through" : ""
                             }`.trim(),
                           textShadow: `${textShadow.offsetX}px ${textShadow.offsetY}px ${textShadow.blur}px ${textShadow.color}`,
-                          transform: `translate(${textPosition.x}px, ${textPosition.y}px)`,
+                          x: textPosition.x,
+                          y: textPosition.y,
                           whiteSpace: "pre-wrap",
                           textAlign: textAlign,
+                          cursor: "grab",
                         }}
-                        className="transition-all duration-300 ease-[cubic-bezier(0.45, 0.05, 0.55, 0.95)]"
+                        className="active:cursor-grabbing"
                       >
                         {text}
-                      </p>
+                      </motion.p>
                     ) : (
                       logoImage && (
-                        <Image
-                          className="transition-all duration-300 ease-[cubic-bezier(0.45, 0.05, 0.55, 0.95)]"
-                          unoptimized
+                        <motion.img
+                          drag
+                          dragMomentum={false}
+                          onDragEnd={(_, info) => {
+                            setTextPosition({
+                              x: textPosition.x + info.offset.x / zoom,
+                              y: textPosition.y + info.offset.y / zoom,
+                            });
+                          }}
+                          className="active:cursor-grabbing"
                           src={logoImage}
                           alt="Logo"
                           style={{
                             maxWidth: `${fontSize}%`,
                             maxHeight: `${fontSize}%`,
                             opacity: opacity / 100,
-                            transform: `translate(${textPosition.x}px, ${textPosition.y}px)`,
+                            x: textPosition.x,
+                            y: textPosition.y,
                             filter: `drop-shadow(${textShadow.offsetX}px ${textShadow.offsetY}px ${textShadow.blur}px ${textShadow.color})`,
+                            cursor: "grab",
                           }}
                         />
                       )
@@ -1148,9 +1179,35 @@ export default function MobileApp({
                                   key={category}
                                   className="flex flex-col gap-2"
                                 >
-                                  <p className="text-xs text-muted-foreground">
-                                    {category}
-                                  </p>
+                                  <div className="flex items-center gap-2 px-1">
+                                    {category === "Desktop & Monitors" && (
+                                      <Monitor className="size-3 text-muted-foreground" />
+                                    )}
+                                    {category === "Mobile Devices" && (
+                                      <Smartphone className="size-3 text-muted-foreground" />
+                                    )}
+                                    {category === "Tablets" && (
+                                      <Tablet className="size-3 text-muted-foreground" />
+                                    )}
+                                    {category === "Metadata" && (
+                                      <ImageIcon className="size-3 text-muted-foreground" />
+                                    )}
+                                    {category === "Instagram" && (
+                                      <Instagram className="size-3 text-muted-foreground" />
+                                    )}
+                                    {category === "Facebook" && (
+                                      <Facebook className="size-3 text-muted-foreground" />
+                                    )}
+                                    {category === "Twitter" && (
+                                      <TwitterIcon className="size-3 text-muted-foreground" />
+                                    )}
+                                    {category === "LinkedIn" && (
+                                      <Linkedin className="size-3 text-muted-foreground" />
+                                    )}
+                                    <p className="text-xs font-medium text-muted-foreground">
+                                      {category}
+                                    </p>
+                                  </div>
                                   <div className="grid grid-cols-3 gap-2">
                                     {RESOLUTION_PRESETS.filter(
                                       (preset) => preset.category === category
