@@ -28,7 +28,7 @@ I use mesh gradients as wallpapers and most of these gradients are locked behind
 ## Development
 
 ```bash
-cd wallpaper-app
+cd gradii0
 pnpm install
 pnpm dev
 ```

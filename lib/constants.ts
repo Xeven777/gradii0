@@ -364,10 +364,13 @@ export interface AppProps {
   setTextPosition: (position: { x: number; y: number }) => void;
   sizeMode: "text" | "image";
   logoImage: string | null;
+  borderRadius: number;
   setTextMode: (mode: "text" | "image") => void;
   setLogoImage: (image: string | null) => void;
+  setBorderRadius: (radius: number) => void;
   textAlign: "left" | "center" | "right";
   setTextAlign: (align: "left" | "center" | "right") => void;
+  setColorsFromImage: (imageSrc: string) => Promise<void>;
   copyImage: () => void;
   copyCSS: () => void;
   isCopying: boolean;

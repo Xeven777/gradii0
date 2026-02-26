@@ -158,13 +158,19 @@ export default function Home() {
         ctx.save();
         ctx.globalAlpha = store.opacity / 100;
         ctx.filter = `drop-shadow(${store.textShadow.offsetX}px ${store.textShadow.offsetY}px ${store.textShadow.blur}px ${store.textShadow.color})`;
-        ctx.drawImage(
-          img,
-          store.resolution.width / 2 - width / 2 + store.textPosition.x,
-          store.resolution.height / 2 - height / 2 + store.textPosition.y,
-          width,
-          height
-        );
+
+        const x = store.resolution.width / 2 - width / 2 + store.textPosition.x;
+        const y =
+          store.resolution.height / 2 - height / 2 + store.textPosition.y;
+
+        if (store.borderRadius > 0) {
+          ctx.beginPath();
+          const scaledRadius = store.borderRadius;
+          ctx.roundRect(x, y, width, height, scaledRadius);
+          ctx.clip();
+        }
+
+        ctx.drawImage(img, x, y, width, height);
         ctx.restore();
       }
 
@@ -307,13 +313,19 @@ export default function Home() {
         ctx.save();
         ctx.globalAlpha = store.opacity / 100;
         ctx.filter = `drop-shadow(${store.textShadow.offsetX}px ${store.textShadow.offsetY}px ${store.textShadow.blur}px ${store.textShadow.color})`;
-        ctx.drawImage(
-          img,
-          store.resolution.width / 2 - width / 2 + store.textPosition.x,
-          store.resolution.height / 2 - height / 2 + store.textPosition.y,
-          width,
-          height
-        );
+
+        const x = store.resolution.width / 2 - width / 2 + store.textPosition.x;
+        const y =
+          store.resolution.height / 2 - height / 2 + store.textPosition.y;
+
+        if (store.borderRadius > 0) {
+          ctx.beginPath();
+          const scaledRadius = store.borderRadius;
+          ctx.roundRect(x, y, width, height, scaledRadius);
+          ctx.clip();
+        }
+
+        ctx.drawImage(img, x, y, width, height);
         ctx.restore();
       }
 
@@ -615,6 +627,7 @@ filter: blur(${blur / 4}px) saturate(${saturation}%) contrast(${contrast}%) brig
       handleColorChange={handleColorChange}
       handleImageUpload={handleImageUpload}
       handlePaletteChange={handlePaletteChange}
+      setColorsFromImage={store.setColorsFromImage}
     />
   );
 }

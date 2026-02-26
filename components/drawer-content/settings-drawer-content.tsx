@@ -16,7 +16,7 @@ export default function SettingsDrawerContent({
     <div className="flex flex-col h-full bg-secondary overflow-y-auto no-scrollbar rounded-2xl relative">
       <div className="flex items-center justify-between p-2 border-b border-primary/10 bg-secondary w-full sticky top-0 z-10">
         <Link
-          href="https://github.com/keshav-exe/wallpaper-app"
+          href="https://github.com/xeven777/gradii0"
           target="_blank"
         >
           <Button variant="accent">
@@ -73,7 +73,7 @@ export default function SettingsDrawerContent({
           </div>
         </div>
         <Link
-          href="https://x.com/intent/tweet?text=Check%20out%20Gradii%20-%20A%20beautiful%20open-source%20gradient%20generator%20tool%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkeshav-exe%2Fwallpaper-app"
+          href="https://x.com/intent/tweet?text=Check%20out%20Gradii%20-%20A%20beautiful%20open-source%20gradient%20generator%20tool%0A%0Ahttps%3A%2F%2Fgithub.com%2Fxeven777%2Fgradii0"
           target="_blank"
           className="flex flex-col gap-2 justify-between border border-primary/10 rounded-2xl p-4 bg-foreground/5 min-h-40"
         >

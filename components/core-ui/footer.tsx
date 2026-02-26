@@ -62,7 +62,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li className="hover:underline cursor-pointer">
-                <Link href="https://github.com/keshav-exe" target="_blank">
+                <Link href="https://github.com/xeven777" target="_blank">
                   Github
                 </Link>
               </li>

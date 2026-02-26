@@ -171,8 +171,10 @@ export default function DesktopApp({
   setTextPosition,
   sizeMode,
   logoImage,
+  borderRadius,
   setTextMode,
   setLogoImage,
+  setBorderRadius,
   textAlign,
   setTextAlign,
   copyImage,
@@ -180,6 +182,7 @@ export default function DesktopApp({
   isCopying,
   handlePaletteChange,
   resetPalette,
+  setColorsFromImage,
 }: AppProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -191,8 +194,10 @@ export default function DesktopApp({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setBackgroundImage(reader.result as string);
+      reader.onloadend = async () => {
+        const result = reader.result as string;
+        setBackgroundImage(result);
+        await setColorsFromImage(result);
       };
       reader.readAsDataURL(file);
     }
@@ -202,11 +207,13 @@ export default function DesktopApp({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setLogoImage(reader.result as string);
+      reader.onloadend = async () => {
+        const result = reader.result as string;
+        setLogoImage(result);
+        setTextMode("image");
+        await setColorsFromImage(result);
       };
       reader.readAsDataURL(file);
-      setTextMode("image");
     }
   };
 
@@ -276,7 +283,7 @@ export default function DesktopApp({
             <ChevronRight className="size-4" />
           </button>
           <Link
-            href="https://x.com/intent/tweet?text=Check%20out%20Gradii%20-%20A%20beautiful%20open-source%20gradient%20generator%20tool%0A%0Ahttps%3A%2F%2Fgithub.com%2Fkeshav-exe%2Fwallpaper-app"
+            href="https://x.com/intent/tweet?text=Check%20out%20Gradii%20-%20A%20beautiful%20open-source%20gradient%20generator%20tool%0A%0Ahttps%3A%2F%2Fgithub.com%2Fxeven777%2Fgradii0"
             target="_blank"
           >
             <Button variant="ghost" size="icon">
@@ -587,6 +594,17 @@ export default function DesktopApp({
                     onValueChange={([value]) => setFontSize(value)}
                     valueSubtext={sizeMode === "text" ? "em" : "%"}
                   />
+                  {sizeMode === "image" && (
+                    <Slider
+                      label="Radius"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={[borderRadius]}
+                      onValueChange={([value]) => setBorderRadius(value)}
+                      valueSubtext="px"
+                    />
+                  )}
                   {sizeMode === "text" && (
                     <>
                       <div className="flex flex-col gap-2 w-full">
@@ -984,6 +1002,7 @@ export default function DesktopApp({
                                 opacity: opacity / 100,
                                 x: textPosition.x,
                                 y: textPosition.y,
+                                borderRadius: `${borderRadius}px`,
                                 filter: `drop-shadow(${textShadow.offsetX}px ${textShadow.offsetY}px ${textShadow.blur}px ${textShadow.color})`,
                                 cursor: "grab",
                               }}

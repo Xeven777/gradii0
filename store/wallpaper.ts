@@ -5,7 +5,7 @@ import {
   type CircleProps,
 } from "@/lib/constants";
 import { Dispatch, SetStateAction } from "react";
-import { debounce } from "@/lib/utils";
+import { debounce, extractColorsFromImage } from "@/lib/utils";
 
 interface WallpaperState {
   // Colors and Circles
@@ -60,6 +60,7 @@ interface WallpaperState {
   // Add these to WallpaperState interface
   sizeMode: "text" | "image";
   logoImage: string | null;
+  borderRadius: number;
 
   // Text Alignment
   textAlign: "left" | "center" | "right";
@@ -112,9 +113,11 @@ interface WallpaperState {
   // Add these actions
   setTextMode: (mode: "text" | "image") => void;
   setLogoImage: (image: string | null) => void;
+  setBorderRadius: (radius: number) => void;
 
   // Add missing setters
   setTextAlign: (align: "left" | "center" | "right") => void;
+  setColorsFromImage: (imageSrc: string) => Promise<void>;
 
   // Add to WallpaperState interface
   isCopying: boolean;
@@ -170,6 +173,7 @@ export const useWallpaperStore = create<WallpaperState>((set, get) => ({
   // Add to initial state
   sizeMode: "text",
   logoImage: null,
+  borderRadius: 0,
 
   // Text Alignment
   textAlign: "center",
@@ -279,7 +283,30 @@ export const useWallpaperStore = create<WallpaperState>((set, get) => ({
   setTextPosition: (textPosition) => set({ textPosition }),
   setTextMode: (mode) => set({ sizeMode: mode }),
   setLogoImage: (image) => set({ logoImage: image }),
+  setBorderRadius: (borderRadius) => set({ borderRadius }),
   setTextAlign: (align) => set({ textAlign: align }),
+  setColorsFromImage: async (imageSrc) => {
+    try {
+      const extractedColors = await extractColorsFromImage(imageSrc, 10);
+      if (extractedColors.length > 0) {
+        const { circles } = get();
+        const newCircles = extractedColors.map((color, i) => ({
+          color,
+          cx: circles[i]?.cx ?? Math.random() * 100,
+          cy: circles[i]?.cy ?? Math.random() * 100,
+        }));
+
+        set({
+          previousCircles: circles,
+          circles: newCircles,
+          numCircles: newCircles.length,
+          backgroundColor: extractedColors[0], // Use the most prominent color as background
+        });
+      }
+    } catch (error) {
+      console.error("Failed to extract colors:", error);
+    }
+  },
   isCopying: false,
   setIsCopying: (isCopying) => set({ isCopying }),
   resetPalette: () => {

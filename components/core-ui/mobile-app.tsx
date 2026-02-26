@@ -175,8 +175,10 @@ export default function MobileApp({
   setTextPosition,
   sizeMode,
   logoImage,
+  borderRadius,
   setTextMode,
   setLogoImage,
+  setBorderRadius,
   textAlign,
   setTextAlign,
   copyImage,
@@ -184,6 +186,7 @@ export default function MobileApp({
   isCopying,
   handlePaletteChange,
   resetPalette,
+  setColorsFromImage,
 }: AppProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(0.2);
@@ -200,8 +203,10 @@ export default function MobileApp({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setBackgroundImage(reader.result as string);
+      reader.onloadend = async () => {
+        const result = reader.result as string;
+        setBackgroundImage(result);
+        await setColorsFromImage(result);
       };
       reader.readAsDataURL(file);
     }
@@ -231,8 +236,11 @@ export default function MobileApp({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setBackgroundImage(reader.result as string);
+      reader.onloadend = async () => {
+        const result = reader.result as string;
+        setLogoImage(result);
+        setTextMode("image");
+        await setColorsFromImage(result);
       };
       reader.readAsDataURL(file);
     }
@@ -418,6 +426,7 @@ export default function MobileApp({
                             opacity: opacity / 100,
                             x: textPosition.x,
                             y: textPosition.y,
+                            borderRadius: `${borderRadius}px`,
                             filter: `drop-shadow(${textShadow.offsetX}px ${textShadow.offsetY}px ${textShadow.blur}px ${textShadow.color})`,
                             cursor: "grab",
                           }}
@@ -739,6 +748,17 @@ export default function MobileApp({
                         onValueChange={([value]) => setFontSize(value)}
                         valueSubtext={sizeMode === "text" ? "em" : "%"}
                       />
+                      {sizeMode === "image" && (
+                        <Slider
+                          label="Radius"
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={[borderRadius]}
+                          onValueChange={([value]) => setBorderRadius(value)}
+                          valueSubtext="px"
+                        />
+                      )}
                       {sizeMode === "text" && (
                         <>
                           <div className="flex flex-col gap-2 w-full">
