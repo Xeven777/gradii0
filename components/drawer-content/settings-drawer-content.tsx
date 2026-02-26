@@ -83,6 +83,34 @@ export default function SettingsDrawerContent({
             experience on X/Twitter
           </h5>
         </Link>
+
+        <div className="flex flex-col gap-4 border border-primary/10 rounded-2xl p-4 bg-foreground/5 w-full">
+          <h5 className="font-semibold tracking-tight text-sm uppercase text-muted-foreground">
+            Keyboard Shortcuts
+          </h5>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { key: "G", action: "Generate" },
+              { key: "S", action: "Shuffle" },
+              { key: "D", action: "Download" },
+              { key: "C", action: "Copy Image" },
+              { key: "Alt + C", action: "Copy CSS" },
+              { key: "Ctrl + Z", action: "Undo" },
+            ].map((shortcut) => (
+              <div
+                key={shortcut.key}
+                className="flex items-center justify-between gap-2"
+              >
+                <span className="text-xs text-muted-foreground">
+                  {shortcut.action}
+                </span>
+                <kbd className="px-2 py-1 bg-background border border-primary/10 rounded text-[10px] font-bold">
+                  {shortcut.key}
+                </kbd>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
