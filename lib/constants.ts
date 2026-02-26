@@ -140,55 +140,55 @@ export const RESOLUTION_PRESETS: ResolutionPreset[] = [
     name: "16:9",
     width: 1920,
     height: 1080,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "3:2",
     width: 1920,
     height: 1280,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "4:3",
     width: 1920,
     height: 1440,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "5:4",
     width: 1920,
     height: 1536,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "1:1",
     width: 1920,
     height: 1920,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "4:5",
     width: 1080,
     height: 1350,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "3:4",
     width: 1080,
     height: 1440,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "2:3",
     width: 1080,
     height: 1620,
-    category: "",
+    category: "Aspect Ratios",
   },
   {
     name: "9:16",
     width: 1080,
     height: 1920,
-    category: "",
+    category: "Aspect Ratios",
   },
 
   // Mobile Devices
@@ -369,6 +369,7 @@ export interface AppProps {
   textAlign: "left" | "center" | "right";
   setTextAlign: (align: "left" | "center" | "right") => void;
   copyImage: () => void;
+  copyCSS: () => void;
   isCopying: boolean;
   setIsCopying: (isCopying: boolean) => void;
   handlePaletteChange: () => void;
